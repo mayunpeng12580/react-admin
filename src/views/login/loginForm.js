@@ -12,6 +12,10 @@ import { Login } from '../../api/account'
 
 // 组件
 import Code from '../../components/code/index'
+
+
+//导入密码加密插件
+import CryptoJs from 'crypto-js'
 class LoginForm extends Component {
     constructor(){
         super();
@@ -20,11 +24,33 @@ class LoginForm extends Component {
             code_button_disabled: false,
             code_button_loading: false,
             code_button_text: '获取验证码',
+            module: 'login',
+            loading: false
         }
     }
 
     onFinish = (values) => {
-        Login().then(res=>{console.log(res)}).catch(err=>{console.log(err)})
+        let password = CryptoJs.MD5(values.password).toString();
+        const requestData = {
+            username: values.username,
+            password: password,
+            code: values.code,
+        }
+        this.setState({
+            loading: true
+            
+        })
+        Login(requestData).then(res=>{
+            console.log(res)
+            this.setState({
+                loading: false
+                })
+        }).catch(err=>{
+            console.log(err);
+            this.setState({
+            loading: false
+            })
+        })
         // console.log('Received values of form: ', values);
       };
 
@@ -126,13 +152,13 @@ class LoginForm extends Component {
                                     <Input prefix={<VerifiedOutlined  className="site-form-item-icon" />} type="text" placeholder="Code" />
                                 </Col>
                                 <Col className="gutter-row" span={9}>
-                                    <Code username={username}></Code>
+                                    <Code  module={this.state.module} username={username}></Code>
                                 </Col>
                             </Row>
                         </Form.Item>
 
                         <Form.Item>
-                            <Button type="primary" htmlType="submit" block className="login-form-button">
+                            <Button loading={this.state.loading} type="primary" htmlType="submit" block className="login-form-button">
                             登录
                             </Button>
                         </Form.Item>

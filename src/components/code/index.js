@@ -33,7 +33,7 @@ class Code extends Component {
 
           const requestData = {
               username: this.state.username,
-              module: 'login',
+              module: this.props.module,
 
           }
           console.log(requestData);
