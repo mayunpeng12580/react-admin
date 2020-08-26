@@ -1,1 +1,12 @@
+<<<<<<< HEAD
 $color:blue
+=======
+@import './reset.scss';
+@import './sassConfig.scss';
+
+//全局性公共的样式
+
+body {
+    background-color: #001529!important;
+}
+>>>>>>> cde2442d7df9e127fb3570f14dd423d9cc710b89
