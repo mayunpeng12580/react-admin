@@ -1,22 +1,21 @@
-import service from "../utils/request";
+import service from "../../src/utils/request";
 
 // 登录接口
 export function Login(data){
     return service.request({
         url: '/login/',
-        method: 'post',
+        method: 'POST',
         data: data,//请求类型为post时
         // params: data //请求类型为get时
     })
 }
 
-
-// 登录接口
-export function Dati(data){
+// 验证码接口
+export function GetCode(data){
     return service.request({
-        url: '/api/rtimu/',
-        method: 'get',
-        // data: data,//请求类型为post时
-        params: data //请求类型为get时
+        url: '/getSms/',
+        method: 'POST',
+        data: data,//请求类型为post时
+        // params: data //请求类型为get时
     })
 }

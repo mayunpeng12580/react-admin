@@ -5,10 +5,14 @@ import './index.scss'
 //antd
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined, VerifiedOutlined  } from '@ant-design/icons';
+// 组件
+import Code from '../../components/code/index'
 class RegisterForm extends Component {
     constructor(){
         super();
-        this.state = {}
+        this.state = {
+            username:''
+        }
     }
 
     toggleForm = () => {
@@ -60,9 +64,7 @@ class RegisterForm extends Component {
                                     <Input prefix={<VerifiedOutlined  className="site-form-item-icon" />} type="password" placeholder="Code" />
                                 </Col>
                                 <Col className="gutter-row" span={9}>
-                                    <Button type="danger" block htmlType="submit" className="login-form-button">
-                                    获取验证码
-                                    </Button> 
+                                    <Code username={this.state.username}></Code> 
                                 </Col>
                             </Row>
                         </Form.Item>

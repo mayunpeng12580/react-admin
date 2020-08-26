@@ -1,4 +1,4 @@
-import React, { Component, Fragment} from 'react';
+import React, { Component} from 'react';
 
 // import { Divider } from 'antd';
 
@@ -25,7 +25,7 @@ class Login extends Component {
         return (
             <div className='from-wrap'>
                 <div>
-                    { this.state.formType == "login" ? <LoginForm switchForm={this.switchForm}></LoginForm> : <RegisterForm switchForm={this.switchForm}></RegisterForm> }
+                    { this.state.formType === "login" ? <LoginForm switchForm={this.switchForm}></LoginForm> : <RegisterForm switchForm={this.switchForm}></RegisterForm> }
                 </div>
             </div>
         )

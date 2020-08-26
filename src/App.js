@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter, Switch, Route, Router, HashHistory, Link} from 'react-router-dom'
+import { HashRouter, Switch, Route} from 'react-router-dom'
 
 import Login from './views/login/index'
 

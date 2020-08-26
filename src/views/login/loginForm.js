@@ -8,25 +8,48 @@ import { validate_password } from '../../utils/validate'
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined, VerifiedOutlined  } from '@ant-design/icons';
 //API
-import { Login,Dati } from '../../api/account'
+import { Login } from '../../api/account'
+
+// 组件
+import Code from '../../components/code/index'
 class LoginForm extends Component {
     constructor(){
         super();
-        this.state = {}
+        this.state = {
+            username: '',
+            code_button_disabled: false,
+            code_button_loading: false,
+            code_button_text: '获取验证码',
+        }
     }
 
     onFinish = (values) => {
-        Dati().then(res=>{console.log(res)}).catch(err=>{console.log(err)})
+        Login().then(res=>{console.log(res)}).catch(err=>{console.log(err)})
         // console.log('Received values of form: ', values);
       };
 
+      //提交表单信息
       toggleForm = () => {
           this.props.switchForm("register");
         console.log(111)
       }
 
+      
+
+    
+
+      //input输入处理
+      inputChange = (e) => {
+          let value = e.target.value
+          this.setState({
+            username: value,
+          })
+      }
+
     render(){
         
+        const { username } = this.state;
+
         return (
             <Fragment>
                 <div className='from-header'>
@@ -51,11 +74,12 @@ class LoginForm extends Component {
                                     {
                                         type: 'email',
                                         message: '邮箱格式错误！！！'
-                                    }
+                                    },
+                                    
                                 ]
                             }
                         >
-                            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+                            <Input value={username} onChange={this.inputChange} prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
                         </Form.Item>
                         <Form.Item
                             name="password"
@@ -99,12 +123,10 @@ class LoginForm extends Component {
                         >
                             <Row gutter={13}>
                                 <Col className="gutter-row" span={15}>
-                                    <Input prefix={<VerifiedOutlined  className="site-form-item-icon" />} type="password" placeholder="Code" />
+                                    <Input prefix={<VerifiedOutlined  className="site-form-item-icon" />} type="text" placeholder="Code" />
                                 </Col>
                                 <Col className="gutter-row" span={9}>
-                                    <Button type="danger" block htmlType="submit" className="login-form-button">
-                                    获取验证码
-                                    </Button> 
+                                    <Code username={username}></Code>
                                 </Col>
                             </Row>
                         </Form.Item>
