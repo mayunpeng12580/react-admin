@@ -10,7 +10,7 @@ const router = [
         title: '用户管理',
         child: [
             {
-                key: '/index/user/list',
+                key: '/index/user/index',
                 title: '用户列表',
             },
             {
@@ -20,16 +20,16 @@ const router = [
         ]
     },
     {
-        key:'/index/navigation',
+        key:'/index/department',
         title: '部门管理',
         icon: 'bars',
         child: [
             {
-                key: '/index/navigation/dropdown',
+                key: '/index/department/index',
                 title: '部门列表'
             },
             {
-                key: '/index/navigation/add',
+                key: '/index/department/add',
                 title: '添加部门'
             }
         ]

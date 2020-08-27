@@ -1,20 +1,59 @@
 import React, { Component, Fragment} from 'react';
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 //router
 import Router from '../../router/index'
 import '../../views/index/components/aside.scss'
 //antd
 import { Menu } from 'antd';
 
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, MenuFoldOutlined  } from '@ant-design/icons';
 
 const { SubMenu } = Menu;
 class AsideMenu extends Component {
     constructor(props){
         super(props)
         this.state = {
-
+            selectedKeys: [],
+            openKeys: []
         }
+    }
+
+    componentDidMount(){
+        const pathname = this.props.location.pathname;
+        const menuKey = pathname.split('/').slice(0, 3).join('/')
+        this.setState({
+            selectedKeys: [pathname],
+            openKeys: [menuKey]
+        })
+        const MenuHight = {
+            selectedKeys: pathname,
+            openKeys: menuKey
+        }
+        this.selectMenuHight(MenuHight)
+    }
+
+    //选择菜单
+    selectMenu = ({ item, key, keyPath, domEvent }) => {
+        const MenuHight = {
+            selectedKeys: key,
+            openKeys: keyPath[keyPath.length-1]
+        }
+        this.selectMenuHight(MenuHight)
+    }
+
+    //菜单高光
+    selectMenuHight = (MenuHight)=> {
+        this.setState({
+            selectedKeys: [MenuHight.selectedKeys],
+            openKeys: [MenuHight.openKeys]
+        })
+    }
+
+    openMenu = (openKeys) => {
+        console.log(openKeys)
+        this.setState({
+            openKeys: [openKeys[openKeys.length-1]]
+        })
     }
 
     //子级菜单方法
@@ -43,13 +82,19 @@ class AsideMenu extends Component {
     }
 
     render () {
+        const { selectedKeys, openKeys } = this.state
         return (
            <Fragment>
                <h1 className="logo"><span>logo</span></h1>
                <Menu
+                    trigger={MenuFoldOutlined}
                     mode="inline"
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
+                    onClick={this.selectMenu}
+                    onOpenChange={this.openMenu}
+                    // defaultSelectedKeys={['1']}
+                    // defaultOpenKeys={['sub1']}
+                    selectedKeys={selectedKeys}
+                    openKeys={openKeys}
                     style={{ height: '100% - 83px' }}
                     theme='dark'
                 >
@@ -67,4 +112,4 @@ class AsideMenu extends Component {
     }
 }
 
-export default AsideMenu
+export default withRouter(AsideMenu)
