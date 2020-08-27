@@ -1,4 +1,5 @@
 import React, { Component, Fragment} from 'react';
+import { withRouter } from 'react-router-dom';
 
 //css
 import './index.scss'
@@ -13,6 +14,8 @@ import { Login } from '../../api/account'
 // 组件
 import Code from '../../components/code/index'
 
+//seeion方法
+import { setToken } from '../../utils/session'
 
 //导入密码加密插件
 import CryptoJs from 'crypto-js'
@@ -50,6 +53,12 @@ class LoginForm extends Component {
             this.setState({
             loading: false
             })
+
+            // 保存token
+            setToken('adminToken');
+
+            //路由跳转
+            this.props.history.push('/index')
         })
         // console.log('Received values of form: ', values);
       };
@@ -171,4 +180,4 @@ class LoginForm extends Component {
     }
 }
 
-export default LoginForm
+export default withRouter(LoginForm)
