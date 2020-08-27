@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { HashRouter, Switch, Route } from 'react-router-dom'
+import { Switch, Route, BrowserRouter } from 'react-router-dom'
 
 import Login from './views/login/index'
 import Index from './views/index/index'
@@ -16,13 +16,12 @@ class App extends React.Component {
   render(h) {
     return (
       <div className='main'>
-
-          <HashRouter>
+          <BrowserRouter>
             <Switch>
-              <Route component={Login} exact   path="/"></Route>
-              <PrivateRoute component={Index} exact   path="/index"></PrivateRoute>
+              <Route component={ Login } exact   path="/"></Route>
+              <PrivateRoute component={ Index }   path="/index"></PrivateRoute>
             </Switch>
-          </HashRouter>
+          </BrowserRouter>
       </div>
     )
   }
