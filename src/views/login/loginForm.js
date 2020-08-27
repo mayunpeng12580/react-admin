@@ -15,7 +15,7 @@ import { Login } from '../../api/account'
 import Code from '../../components/code/index'
 
 //seeion方法
-import { setToken } from '../../utils/session'
+import { setToken, setUsername } from '../../utils/cookies'
 
 //导入密码加密插件
 import CryptoJs from 'crypto-js'
@@ -56,6 +56,7 @@ class LoginForm extends Component {
 
             // 保存token
             setToken('adminToken');
+            setUsername('username')
 
             //路由跳转
             this.props.history.push('/index')
