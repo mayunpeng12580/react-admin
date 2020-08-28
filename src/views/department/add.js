@@ -4,22 +4,21 @@ import React, { Component} from 'react';
 import { Form, Input, Button, message, InputNumber, Radio} from 'antd'
 
 //新增部门接口
-import { DepartmentAddApi } from '../../api/department'
+import { DepartmentAddApi, Detailed, Edit } from '../../api/department'
 class DepartmentAdd extends Component {
     constructor(props){
         super(props);
         this.state = {
             formLayout:{
                 labelCol: { span: 4 },
-                wrapperCol: { span: 15 }
+                wrapperCol: { span: 15 },
+                id: ''
             },
             loading: false
         }
     }
 
     onSubmit = (values) => {
-
-        
         console.log(values)
         if(!values.name) {
             message.error('部门名称不能为空！！！');
@@ -39,6 +38,13 @@ class DepartmentAdd extends Component {
             loading: true
         })
 
+        this.state.id ? this.onHandleEdit(values) : this.onHandleAdd(values);
+
+        
+    }
+
+    //添加信息
+    onHandleAdd = (values) => {
         DepartmentAddApi(values)
         .then(res => {
             message.success('添加成功！！！')
@@ -54,6 +60,58 @@ class DepartmentAdd extends Component {
                 loading: false
             })
         })
+    }
+
+    //编辑信息
+    onHandleEdit = (values) => {
+        Edit(values)
+        .then(res => {
+            message.success('编辑成功！！！')
+            this.setState({
+                loading: false
+            })
+        })
+        .catch(err => {
+            message.error('编辑失败！！！')
+            console.log(err)
+            this.setState({
+                loading: false
+            })
+        })
+    }
+
+
+    //页面渲染之前
+    componentWillMount(){
+        if (this.props.location.state) {
+            this.setState({
+                id: this.props.location.state
+            })
+        }
+        
+    }
+
+    //页面挂在之后
+    componentDidMount(){
+        if (this.props.location.state) {
+            this.getDetailed()
+        }
+    }
+
+    getDetailed = () => {
+        Detailed({id:this.props.location.state.id})
+            .then(res => {
+
+            })
+            .catch(err => {
+                this.refs.form.setFieldsValue({
+                    content: '64641615511',
+                    name: '张三',
+                    number: 200,
+                    status: true,
+                })
+                console.log(err)
+            })
     }
 
     render (){

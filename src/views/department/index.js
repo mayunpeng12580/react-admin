@@ -1,23 +1,28 @@
 import React, { Component, Fragment} from 'react';
 
+//
+import { Link } from "react-router-dom";
+
 //antd
-import { Form, Input, Button, Table, Switch, message } from 'antd';
+import { Form, Input, Button, Table, Switch, message, Modal } from 'antd';
 
 //api
-import { GetList, Delete } from '../../api/department'
+import { GetList, Delete, Status } from '../../api/department'
 class DepartmentIndex extends Component {
     constructor(props){
         super(props);
         this.state = {
             columns: [
                 {title: '部门名称', dataIndex: 'name', key:'name'},
-                {title: '禁启用', dataIndex: 'status', key:'status',render: (text, rowData)=> { return <Switch checkedChildren="开启" unCheckedChildren="关闭" defaultChecked={rowData.status} />}},
+                {title: '禁启用', dataIndex: 'status', key:'status',
+                    render: (text, rowData)=> { return <Switch onChange={()=>{this.onHandleSwitch(rowData)}} checkedChildren="开启" unCheckedChildren="关闭" defaultChecked={rowData.status} />}},
                 {title: '人员数量', dataIndex: 'number', key:'number'},
                 {title: '操作', dataIndex: 'operation', key:'operation', width: '215px', 
                     render: (text, rowData) => {
                         return (
                             <div className="inline-button">
-                                <Button type='primary'>编辑</Button>
+                                
+                                <Button type='primary' ><Link to={{pathname: '/index/department/add', state:{id: rowData.id}}} >编辑</Link></Button>
                                 <Button onClick={()=>this.onHandleDelete(rowData.id)}>删除</Button>
                             </div>
                         )
@@ -43,7 +48,10 @@ class DepartmentIndex extends Component {
             pageSize:10,
             keyWork:'',
             //复选框数据
-            selectedRowKeys: []
+            selectedRowKeys: [],
+            visible: false,
+            id: '',
+            confirmLoading: false
 
         }
 
@@ -62,16 +70,12 @@ class DepartmentIndex extends Component {
 
         //删除
         onHandleDelete = (id) => {
+            this.setState({
+                visible: true,
+                id: id
+            })
             console.log(id)
-            Delete(id)
-            .then(res => {
-                message.success('删除失败！！！')
-                this.loadData();
-            })
-            .catch(err => {
-                console.log(err)
-                message.error('删除失败！！！')
-            })
+            
         }
 
         //生命周期挂载完成
@@ -79,6 +83,7 @@ class DepartmentIndex extends Component {
             this.loadData();
         }
 
+        //请求部门列表数据
         loadData = () => {
             const requestData = {
                 pageNumber: this.state.pageNumber,
@@ -103,6 +108,53 @@ class DepartmentIndex extends Component {
                 selectedRowKeys
             })
         }
+
+        //隐藏modal
+          hideModal = () => {
+            this.setState({
+              visible: false,
+            });
+          };
+
+          //modal点击确认时
+          modalThen = () => {
+
+            this.setState({
+                visible: false,
+                confirmLoading: true
+              });
+              Delete(this.state.id)
+              .then(res => {
+                  message.success('删除成功！！！')
+                  this.loadData();
+                  this.setState({
+                    confirmLoading: false
+                  });
+              })
+              .catch(err => {
+                  console.log(err)
+                  message.error('删除失败！！！')
+                  this.setState({
+                    confirmLoading: false
+                  });
+              })
+          }
+
+        //禁用启用api
+          onHandleSwitch = (data) => {
+            Status({id: data.id,status:data.status})
+                .then(res => {
+
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+          }
+
+          //编辑部门信息
+          onHandleEdit = (id) => {
+
+          }
 
     render (){
         const {columns, dataSource} = this.state
@@ -135,6 +187,18 @@ class DepartmentIndex extends Component {
 
                     </Table>
                     </div>
+                    <Modal
+
+                    title="提示"
+                    visible={this.state.visible}
+                    onOk={this.modalThen}
+                    onCancel={this.hideModal}
+                    okText="确认"
+                    cancelText="取消"
+                    confirmLoading={this.state.confirmLoading}
+                    >
+                    <p className="text-center">确定删除此条信息?<span className="color-red">删除后将无法回复.</span></p>
+                    </Modal>
             </Fragment>
         )
     }

@@ -30,3 +30,34 @@ export function Delete(data){
         // params: data //请求类型为get时
     })
 }
+
+// 部门禁启用接口
+export function Status(data){
+    return service.request({
+        url: '/department/status',
+        method: 'POST',
+        data: data,//请求类型为post时
+        // params: data //请求类型为get时
+    })
+}
+
+// 部门详情接口
+export function Detailed(data){
+    return service.request({
+        url: '/department/detail',
+        method: 'POST',
+        data: data,//请求类型为post时
+        // params: data //请求类型为get时
+    })
+}
+
+// 部门编辑接口
+export function Edit(data){
+    return service.request({
+        url: '/department/edit',
+        method: 'POST',
+        data: data,//请求类型为post时
+        // params: data //请求类型为get时
+    })
+}
+
