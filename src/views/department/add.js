@@ -66,7 +66,10 @@ class DepartmentAdd extends Component {
     onHandleEdit = (values) => {
         Edit(values)
         .then(res => {
+
             message.success('编辑成功！！！')
+            this.refs.form.resetFields();
+
             this.setState({
                 loading: false
             })

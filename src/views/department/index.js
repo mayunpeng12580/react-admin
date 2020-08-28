@@ -12,10 +12,11 @@ class DepartmentIndex extends Component {
     constructor(props){
         super(props);
         this.state = {
+            switchId: '',
             columns: [
                 {title: '部门名称', dataIndex: 'name', key:'name'},
                 {title: '禁启用', dataIndex: 'status', key:'status',
-                    render: (text, rowData)=> { return <Switch onChange={()=>{this.onHandleSwitch(rowData)}} checkedChildren="开启" unCheckedChildren="关闭" defaultChecked={rowData.status} />}},
+                    render: (text, rowData)=> { return <Switch loading={rowData.id == this.state.switchId} onChange={()=>{this.onHandleSwitch(rowData)}} checkedChildren="开启" unCheckedChildren="关闭" defaultChecked={rowData.status} />}},
                 {title: '人员数量', dataIndex: 'number', key:'number'},
                 {title: '操作', dataIndex: 'operation', key:'operation', width: '215px', 
                     render: (text, rowData) => {
@@ -51,7 +52,8 @@ class DepartmentIndex extends Component {
             selectedRowKeys: [],
             visible: false,
             id: '',
-            confirmLoading: false
+            confirmLoading: false,
+            tableLoading:false
 
         }
 
@@ -70,6 +72,14 @@ class DepartmentIndex extends Component {
 
         //删除
         onHandleDelete = (id) => {
+            //批量删除
+            if (!id) { 
+                if (this.state.selectedRowKeys.length === 0) { return false }
+                console.log(this.state.selectedRowKeys)
+                id = this.state.selectedRowKeys.join()
+            } 
+
+            //按钮单个删除
             this.setState({
                 visible: true,
                 id: id
@@ -92,11 +102,17 @@ class DepartmentIndex extends Component {
             if (this.state.keyWork){
                 requestData.name = this.state.keyWork
             }
+            this.setState({
+                tableLoading: true
+            })
             GetList(requestData)
             .then(res => {
 
             })
             .catch( err => {
+                this.setState({
+                    tableLoading: false
+                })
                 console.log(err)
             })
         }
@@ -128,33 +144,39 @@ class DepartmentIndex extends Component {
                   message.success('删除成功！！！')
                   this.loadData();
                   this.setState({
-                    confirmLoading: false
+                    confirmLoading: false,
+                    id:'',
+                    selectedRowKeys: []
                   });
               })
               .catch(err => {
                   console.log(err)
                   message.error('删除失败！！！')
                   this.setState({
-                    confirmLoading: false
+                    confirmLoading: false,
+                    id:'',
+                    selectedRowKeys: []
                   });
               })
           }
 
         //禁用启用api
           onHandleSwitch = (data) => {
+            this.setState({
+                switchId: data.id
+            })
             Status({id: data.id,status:data.status})
                 .then(res => {
 
                 })
                 .catch(err => {
+                    this.setState({
+                        switchId:''
+                    })
                     console.log(err)
                 })
           }
 
-          //编辑部门信息
-          onHandleEdit = (id) => {
-
-          }
 
     render (){
         const {columns, dataSource} = this.state
@@ -183,9 +205,10 @@ class DepartmentIndex extends Component {
                     </Form.Item>
                     </Form>
                     <div className="table-wrap">
-                    <Table rowSelection={rowSelection} rowKey='id' bordered columns={columns} dataSource={dataSource}>
+                    <Table loading={this.state.tableLoading} rowSelection={rowSelection} rowKey='id' bordered columns={columns} dataSource={dataSource}>
 
                     </Table>
+                    <Button onClick={()=>{this.onHandleDelete()}} type='primary'>批量删除</Button>
                     </div>
                     <Modal
 
