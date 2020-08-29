@@ -40,11 +40,11 @@ const router = [
         icon: 'edit',
         child: [
             {
-                key: '/index/entry/form/basic-form',
+                key: '/index/entry/index',
                 title: '职位列表'
             },
             {
-                key: '/index/entry/form/step-form',
+                key: '/index/entry/add',
                 title: '添加职位'
             }
         ]
